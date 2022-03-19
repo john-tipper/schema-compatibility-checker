@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'application'
+    id 'com.bmuschko.docker-java-application' version '7.3.0'
+}
+
+group 'org.johntipper'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven"
+    }
+    maven {
+        url 'https://jitpack.io'
+    }
+}
+
+dependencies {
+    implementation 'io.confluent:kafka-json-schema-provider:7.0.1'
+    implementation 'io.confluent:kafka-protobuf-provider:7.0.1'
+    implementation 'commons-cli:commons-cli:1.5.0'
+    implementation 'org.slf4j:slf4j-simple:1.7.21'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-inline:4.4.0'
+
+}
+
+mainClassName = 'org.johntipper.Main'
+
+docker {
+    javaApplication {
+        maintainer = "John Tipper"
+        ports = []
+        images = ["johnlondon/schema-compatibility-checker:${project.version}", "johnlondon/schema-compatibility-checker:latest"]
+    }
+}
+
+dockerBuildImage.dependsOn test
